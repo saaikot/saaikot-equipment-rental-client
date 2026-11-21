@@ -2,6 +2,7 @@
 - [x] Next.js + ShadCN setup
 - [x] BetterAuth config (server, client, mongodb adapter)
 - [x] Sonner Toaster setup
-- [ ] Login/Register Pages
+- [x] Login/Register Pages (Email/Pass + Google)
+- [x] Navbar & Footer components
 - [ ] Public Pages (Home, All Equipment, Details)
 ...
