@@ -22,7 +22,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { data, error } = await authClient.signIn.email({
+      const { error } = await authClient.signIn.email({
         email,
         password,
       });
@@ -33,7 +33,7 @@ export default function LoginPage() {
         toast.success("Login successful!");
         router.push("/"); // Redirect to home page after login
       }
-    } catch (err) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setLoading(false);
@@ -46,7 +46,7 @@ export default function LoginPage() {
         provider: "google",
         callbackURL: "/", // Where to go after successful login
       });
-    } catch (err) {
+    } catch {
       toast.error("Google login failed");
     }
   };
@@ -111,7 +111,7 @@ export default function LoginPage() {
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm">
-            Don't have an account? <Link href="/register" className="text-primary hover:underline">Register</Link>
+            Don&apos;t have an account? <Link href="/register" className="text-primary hover:underline">Register</Link>
           </p>
         </CardFooter>
       </Card>

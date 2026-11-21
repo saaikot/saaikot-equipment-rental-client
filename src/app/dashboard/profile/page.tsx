@@ -57,7 +57,7 @@ export default function ProfilePage() {
       });
       
       toast.success("Profile updated successfully!");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update profile");
     } finally {
       setLoading(false);

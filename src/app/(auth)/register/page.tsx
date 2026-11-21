@@ -36,7 +36,7 @@ export default function RegisterPage() {
 
     try {
       // BetterAuth Sign Up Function
-      const { data, error } = await authClient.signUp.email({
+      const { error } = await authClient.signUp.email({
         email: formData.email,
         password: formData.password,
         name: formData.name,
@@ -50,7 +50,7 @@ export default function RegisterPage() {
         toast.success("Registration successful! Please login.");
         router.push("/login");
       }
-    } catch (err) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setLoading(false);

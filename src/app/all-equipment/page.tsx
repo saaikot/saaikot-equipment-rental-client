@@ -3,14 +3,16 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Filter } from "lucide-react";
+import { Search } from "lucide-react";
+import type { Equipment } from "@/lib/types";
 
 export default function AllEquipmentPage() {
-  const [equipment, setEquipment] = useState<any[]>([]);
+  const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
 
   // State for Search, Filter & Sort (Challenge 1)
@@ -127,7 +129,7 @@ export default function AllEquipmentPage() {
             {equipment.map((item) => (
               <Card key={item._id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
                 <div className="relative h-48">
-                  <img src={item.imageURL} alt={item.name} className="w-full h-full object-cover" />
+                  <Image src={item.imageURL} alt={item.name} fill unoptimized className="object-cover" />
                   <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded text-xs font-bold text-slate-900">
                     {item.rentalType}
                   </div>

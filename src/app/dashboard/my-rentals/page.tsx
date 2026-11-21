@@ -3,11 +3,13 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import type { Rental } from "@/lib/types";
 
 export default function MyRentalsPage() {
-  const [rentals, setRentals] = useState<any[]>([]);
+  const [rentals, setRentals] = useState<Rental[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +23,7 @@ export default function MyRentalsPage() {
           headers: { Authorization: `Bearer ${token}` }
         });
         setRentals(res.data.bookings || []);
-      } catch (error) {
+      } catch {
         toast.error("Failed to load rentals");
       } finally {
         setLoading(false);
@@ -56,7 +58,16 @@ export default function MyRentalsPage() {
               {rentals.map((rental) => (
                 <tr key={rental._id} className="hover:bg-slate-50">
                   <td className="px-6 py-4 flex items-center gap-3">
-                    <img src={rental.equipmentId?.imageURL} alt="eq" className="w-10 h-10 rounded object-cover" />
+                    {rental.equipmentId?.imageURL && (
+                      <Image
+                        src={rental.equipmentId.imageURL}
+                        alt={rental.equipmentId.name}
+                        width={40}
+                        height={40}
+                        unoptimized
+                        className="rounded object-cover"
+                      />
+                    )}
                     <span className="font-medium">{rental.equipmentId?.name}</span>
                   </td>
                   <td className="px-6 py-4 text-slate-600">

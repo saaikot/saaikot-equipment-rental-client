@@ -4,12 +4,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { Equipment } from "@/lib/types";
 
 export default function FeaturedEquipment() {
-  const [equipment, setEquipment] = useState<any[]>([]);
+  const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -54,7 +56,9 @@ export default function FeaturedEquipment() {
               transition={{ duration: 0.4, delay: index * 0.1 }}
             >
               <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-                <img src={item.imageURL} alt={item.name} className="w-full h-48 object-cover" />
+                <div className="relative h-48">
+                  <Image src={item.imageURL} alt={item.name} fill unoptimized className="object-cover" />
+                </div>
                 <CardContent className="p-6 flex-grow flex flex-col">
                   <div className="text-sm text-primary font-semibold mb-2">{item.category}</div>
                   <h3 className="text-xl font-bold mb-2 truncate">{item.name}</h3>

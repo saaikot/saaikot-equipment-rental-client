@@ -1,7 +1,8 @@
 // src/app/all-equipment/[id]/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { authClient } from "@/lib/auth-client";
@@ -19,13 +20,14 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Heart, MapPin, Tag, ShieldCheck, Box } from "lucide-react";
+import type { Equipment } from "@/lib/types";
 
-export default function EquipmentDetailsPage() {
+function EquipmentDetails() {
   const { id } = useParams();
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
   
-  const [equipment, setEquipment] = useState<any>(null);
+  const [equipment, setEquipment] = useState<Equipment | null>(null);
   const [loading, setLoading] = useState(true);
   const [isBooking, setIsBooking] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,7 +62,7 @@ export default function EquipmentDetailsPage() {
           headers: { Authorization: `Bearer ${token}` }
         });
         setEquipment(res.data.equipment);
-      } catch (error) {
+      } catch {
         toast.error("Equipment not found");
       } finally {
         setLoading(false);
@@ -80,7 +82,7 @@ export default function EquipmentDetailsPage() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success("Added to favorites!");
-    } catch (error) {
+    } catch {
       toast.error("Failed to add to favorites");
     }
   };
@@ -128,8 +130,11 @@ export default function EquipmentDetailsPage() {
       // router.push(`/payment/${res.data.booking._id}`);
       console.log("Booking Data:", res.data.booking); // For testing
 
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to create booking");
+    } catch (error) {
+      const message = axios.isAxiosError(error)
+        ? error.response?.data?.message
+        : undefined;
+      toast.error(message || "Failed to create booking");
     } finally {
       setIsBooking(false);
     }
@@ -145,7 +150,7 @@ export default function EquipmentDetailsPage() {
         <div className="bg-white rounded-2xl shadow-sm border overflow-hidden grid grid-cols-1 md:grid-cols-2">
           {/* Image Section */}
           <div className="h-64 md:h-full min-h-[400px] relative">
-            <img src={equipment.imageURL} alt={equipment.name} className="absolute inset-0 w-full h-full object-cover" />
+            <Image src={equipment.imageURL} alt={equipment.name} fill unoptimized className="object-cover" />
           </div>
 
           {/* Details Section */}
@@ -254,5 +259,13 @@ export default function EquipmentDetailsPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function EquipmentDetailsPage() {
+  return (
+    <Suspense fallback={<div className="text-center py-20">Loading...</div>}>
+      <EquipmentDetails />
+    </Suspense>
   );
 }

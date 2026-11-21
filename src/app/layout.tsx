@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -20,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} flex flex-col min-h-screen bg-slate-50`}>
-        <Navbar />
+        <Suspense fallback={<div className="h-16 border-b bg-white" />}>
+          <Navbar />
+        </Suspense>
         {/* Main content wrapper to push footer to the bottom */}
         <main className="flex-grow">
           {children}

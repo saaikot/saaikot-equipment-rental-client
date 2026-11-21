@@ -1,7 +1,18 @@
 // src/components/layout/Footer.tsx
 import Link from "next/link";
+import { cacheLife } from "next/cache";
 
-export default function Footer() {
+// With Cache Components enabled, time reads must be captured in a cache scope
+// so they don't block prerendering.
+async function getCurrentYear() {
+  "use cache";
+  cacheLife("days");
+  return new Date().getFullYear();
+}
+
+export default async function Footer() {
+  const year = await getCurrentYear();
+
   return (
     <footer className="bg-slate-900 text-slate-300 py-10 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -71,7 +82,7 @@ export default function Footer() {
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 pt-6 border-t border-slate-700 text-center text-sm">
-        &copy; {new Date().getFullYear()} RentEasy. All rights reserved.
+        &copy; {year} RentEasy. All rights reserved.
       </div>
     </footer>
   );

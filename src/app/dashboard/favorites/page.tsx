@@ -3,34 +3,35 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Image from "next/image";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
+import type { Favorite } from "@/lib/types";
 
 export default function FavoritesPage() {
-  const [favorites, setFavorites] = useState<any[]>([]);
+  const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchFavorites = async () => {
-    try {
-      const tokenRes = await authClient.token();
-      const token = tokenRes?.data?.token;
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
-
-      const res = await axios.get(`${backendUrl}/api/favorites`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setFavorites(res.data.favorites || []);
-    } catch (error) {
-      toast.error("Failed to load favorites");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        const tokenRes = await authClient.token();
+        const token = tokenRes?.data?.token;
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+
+        const res = await axios.get(`${backendUrl}/api/favorites`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setFavorites(res.data.favorites || []);
+      } catch {
+        toast.error("Failed to load favorites");
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchFavorites();
   }, []);
 
@@ -45,7 +46,7 @@ export default function FavoritesPage() {
       });
       toast.success("Removed from favorites");
       setFavorites(favorites.filter(fav => fav.equipmentId?._id !== equipmentId));
-    } catch (error) {
+    } catch {
       toast.error("Failed to remove");
     }
   };
@@ -58,7 +59,7 @@ export default function FavoritesPage() {
       
       {favorites.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-xl border">
-          <p className="text-slate-500">You haven't added any equipment to favorites yet.</p>
+          <p className="text-slate-500">You haven&apos;t added any equipment to favorites yet.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -68,7 +69,9 @@ export default function FavoritesPage() {
             
             return (
               <div key={fav._id} className="bg-white rounded-xl shadow-sm border overflow-hidden">
-                <img src={eq.imageURL} alt={eq.name} className="w-full h-40 object-cover" />
+                <div className="relative h-40">
+                  <Image src={eq.imageURL} alt={eq.name} fill unoptimized className="object-cover" />
+                </div>
                 <div className="p-4 space-y-2">
                   <h3 className="font-bold">{eq.name}</h3>
                   <p className="text-sm text-primary font-semibold">${eq.price} / {eq.rentalType}</p>
