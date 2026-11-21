@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "sonner"; // Import Toaster
+import { Toaster } from "sonner";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,9 +19,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {children}
-        <Toaster position="top-center" richColors /> {/* Add Toaster here */}
+      <body className={`${inter.className} flex flex-col min-h-screen bg-slate-50`}>
+        <Navbar />
+        {/* Main content wrapper to push footer to the bottom */}
+        <main className="flex-grow">
+          {children}
+        </main>
+        <Footer />
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );
