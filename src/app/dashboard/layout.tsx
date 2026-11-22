@@ -21,6 +21,11 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
 
   if (isPending || !session) return <div className="text-center py-20">Loading dashboard...</div>;
 
+  // Owner and admin sections render their own sidebar, so skip the customer one.
+  if (pathname.startsWith("/dashboard/owner") || pathname.startsWith("/dashboard/admin")) {
+    return <>{children}</>;
+  }
+
   const menuItems = [
     { name: "My Rentals", href: "/dashboard/my-rentals", icon: <Box className="w-5 h-5" /> },
     { name: "Favorites", href: "/dashboard/favorites", icon: <Heart className="w-5 h-5" /> },
