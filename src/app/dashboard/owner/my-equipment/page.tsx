@@ -9,29 +9,40 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Eye, Trash2 } from "lucide-react";
 
+// 1. Define proper type to avoid 'any' error
+interface EquipmentData {
+  _id: string;
+  name: string;
+  category: string;
+  price: number;
+  availableQuantity: number;
+  status: string;
+  imageURL: string;
+}
+
 export default function MyEquipmentPage() {
-  const [equipment, setEquipment] = useState<any[]>([]);
+  const [equipment, setEquipment] = useState<EquipmentData[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchMyEquipment = async () => {
-    try {
-      const tokenRes = await authClient.token();
-      const token = tokenRes?.data?.token;
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
-
-      const res = await axios.get(`${backendUrl}/api/equipment/owner/my`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setEquipment(res.data.items || []);
-    } catch (error) {
-      toast.error("Failed to load your equipment");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // 2. Fixed useEffect warning by wrapping fetch in an IIFE
   useEffect(() => {
-    fetchMyEquipment();
+    const loadData = async () => {
+      try {
+        const tokenRes = await authClient.token();
+        const token = tokenRes?.data?.token;
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+
+        const res = await axios.get(`${backendUrl}/api/equipment/owner/my`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setEquipment(res.data.items || []);
+      } catch (error) {
+        toast.error("Failed to load your equipment");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
   }, []);
 
   const handleDelete = async (id: string) => {
@@ -65,7 +76,8 @@ export default function MyEquipmentPage() {
       
       {equipment.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-xl border">
-          <p className="text-slate-500 mb-4">You haven't added any equipment yet.</p>
+          {/* 3. Fixed the apostrophe escape error here */}
+          <p className="text-slate-500 mb-4">You haven&apos;t added any equipment yet.</p>
           <Link href="/dashboard/owner/add-equipment">
             <Button>Add Your First Equipment</Button>
           </Link>
