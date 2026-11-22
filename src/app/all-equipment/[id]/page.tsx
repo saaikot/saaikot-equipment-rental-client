@@ -118,24 +118,27 @@ function EquipmentDetails() {
       const token = tokenRes?.data?.token;
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 
-      const res = await axios.post(`${backendUrl}/api/bookings`, 
+      // 1. Create Booking
+      const bookingRes = await axios.post(`${backendUrl}/api/bookings`, 
         { equipmentId: id, ...bookingData },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      toast.success("Booking created! Proceeding to payment...");
-      setIsModalOpen(false);
-      
-      // We will integrate Stripe here in the next step. For now, redirect to dashboard or a mock page.
-      // router.push(`/payment/${res.data.booking._id}`);
-      console.log("Booking Data:", res.data.booking); // For testing
+      const bookingId = bookingRes.data.booking._id;
 
-    } catch (error) {
-      const message = axios.isAxiosError(error)
-        ? error.response?.data?.message
-        : undefined;
-      toast.error(message || "Failed to create booking");
-    } finally {
+      // 2. Create Stripe Checkout Session
+      const paymentRes = await axios.post(`${backendUrl}/api/payments/create-checkout-session`, 
+        { bookingId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // 3. Redirect to Stripe Checkout
+      window.location.href = paymentRes.data.url;
+
+     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Failed to initiate payment");
+      }
       setIsBooking(false);
     }
   };
