@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Image from "next/image";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
@@ -36,7 +37,7 @@ export default function MyEquipmentPage() {
           headers: { Authorization: `Bearer ${token}` }
         });
         setEquipment(res.data.items || []);
-      } catch (error) {
+      } catch {
         toast.error("Failed to load your equipment");
       } finally {
         setLoading(false);
@@ -58,7 +59,7 @@ export default function MyEquipmentPage() {
       });
       toast.success("Equipment deleted successfully");
       setEquipment(equipment.filter((eq) => eq._id !== id));
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete equipment");
     }
   };
@@ -99,7 +100,14 @@ export default function MyEquipmentPage() {
               {equipment.map((eq) => (
                 <tr key={eq._id} className="hover:bg-slate-50">
                   <td className="px-6 py-4 flex items-center gap-3">
-                    <img src={eq.imageURL} alt="eq" className="w-10 h-10 rounded object-cover" />
+                    <Image
+                      src={eq.imageURL}
+                      alt={eq.name}
+                      width={40}
+                      height={40}
+                      unoptimized
+                      className="w-10 h-10 rounded object-cover"
+                    />
                     <span className="font-medium">{eq.name}</span>
                   </td>
                   <td className="px-6 py-4 text-slate-600">{eq.category}</td>
