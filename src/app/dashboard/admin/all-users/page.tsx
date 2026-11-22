@@ -43,10 +43,11 @@ export default function AllUsersPage() {
 
   if (loading) return <div>Loading users...</div>;
 
-  // Quick counters shown above the table.
+  // Quick counters shown above the table. Accounts created before roles were
+  // added fall back to the default "customer" role.
   const counts = {
     total: users.length,
-    customers: users.filter((u) => u.role === "customer").length,
+    customers: users.filter((u) => (u.role || "customer") === "customer").length,
     owners: users.filter((u) => u.role === "owner").length,
     admins: users.filter((u) => u.role === "admin").length,
   };
@@ -114,8 +115,8 @@ export default function AllUsersPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${roleBadge(user.role)}`}>
-                      {user.role}
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${roleBadge(user.role || "customer")}`}>
+                      {user.role || "customer"}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-slate-600">{user.phone || "—"}</td>
