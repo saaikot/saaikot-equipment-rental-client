@@ -110,7 +110,7 @@ Copy the printed `whsec_...` value into `STRIPE_WEBHOOK_SECRET`.
 
 ## ▲ Deploy on Vercel
 
-Both projects deploy to Vercel. The server is detected automatically as an Express app: `index.js` exports the app and `server.js` is only used for the local listener.
+Both projects deploy to Vercel. The server is detected automatically as an Express app: `index.js` exports the app and `local-server.js` is only used for the local listener.
 
 ### 1. Deploy the API first
 
@@ -167,8 +167,8 @@ db.user.updateOne({ email: "admin@example.com" }, { $set: { role: "admin" } })
 
 | Client | Server |
 | --- | --- |
-| `npm run dev` | `npm run dev` (nodemon + `server.js`) |
-| `npm run build` | `npm start` (`server.js`) |
+| `npm run dev` | `npm run dev` (nodemon + `local-server.js`) |
+| `npm run build` | `npm start` (`local-server.js`) |
 | `npm run lint` | `node seed.js` |
 
-> On Vercel the server ignores `server.js` and runs the app exported from `index.js`.
+> On Vercel the server ignores `local-server.js` and runs the app exported from `index.js`.
