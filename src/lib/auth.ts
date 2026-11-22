@@ -4,10 +4,13 @@ import { betterAuth } from "better-auth";
 import { jwt } from "better-auth/plugins";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { MongoClient } from "mongodb";
-import dns from "dns"; // 👈 নতুন লাইন
+import dns from "dns";
 
-// 👈 নতুন লাইন: Force Node.js to use Google DNS for MongoDB Atlas
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
+// Force Google DNS locally so MongoDB Atlas SRV records resolve on Windows.
+// Vercel's own resolver handles this, and overriding it there can break lookups.
+if (!process.env.VERCEL) {
+  dns.setServers(["8.8.8.8", "8.8.4.4"]);
+}
 
 // Initialize MongoDB client
 const client = new MongoClient(process.env.MONGODB_URI as string);
