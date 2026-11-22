@@ -50,26 +50,44 @@ function EquipmentDetails() {
     }
   }, [session, isPending, router]);
 
+  // Fetch Equipment Data
   useEffect(() => {
     const fetchEquipment = async () => {
-      if (!session) return;
+      // Wait until session is fully loaded and user is logged in
+      if (isPending || !session) return;
+      
       try {
         const tokenRes = await authClient.token();
         const token = tokenRes?.data?.token;
+        
+        if (!token) {
+          toast.error("Authentication failed. Please login again.");
+          return;
+        }
+
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
         
         const res = await axios.get(`${backendUrl}/api/equipment/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
+        
         setEquipment(res.data.equipment);
-      } catch {
-        toast.error("Equipment not found");
+      } catch (error) {
+        // Show the actual error in console for debugging
+        if (axios.isAxiosError(error)) {
+          console.error("Axios Error Details:", error.response?.data || error.message);
+          toast.error(error.response?.data?.message || "Failed to load equipment details");
+        } else {
+          console.error("Unknown Error:", error);
+          toast.error("An unexpected error occurred");
+        }
       } finally {
         setLoading(false);
       }
     };
+    
     fetchEquipment();
-  }, [id, session]);
+  }, [id, session, isPending]); // Added isPending here
 
   const handleAddToFavorite = async () => {
     try {
@@ -82,8 +100,12 @@ function EquipmentDetails() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success("Added to favorites!");
-    } catch {
-      toast.error("Failed to add to favorites");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Failed to add to favorites");
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
   };
 
@@ -135,9 +157,11 @@ function EquipmentDetails() {
       // 3. Redirect to Stripe Checkout
       window.location.href = paymentRes.data.url;
 
-     } catch (error) {
+    } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message || "Failed to initiate payment");
+      } else {
+        toast.error("An unexpected error occurred");
       }
       setIsBooking(false);
     }

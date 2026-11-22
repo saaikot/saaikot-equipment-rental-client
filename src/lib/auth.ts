@@ -4,6 +4,10 @@ import { betterAuth } from "better-auth";
 import { jwt } from "better-auth/plugins";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { MongoClient } from "mongodb";
+import dns from "dns"; // 👈 নতুন লাইন
+
+// 👈 নতুন লাইন: Force Node.js to use Google DNS for MongoDB Atlas
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 // Initialize MongoDB client
 const client = new MongoClient(process.env.MONGODB_URI as string);
@@ -22,15 +26,13 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
-      // We tell BetterAuth to save the 'role' field during registration
       role: {
         type: "string",
         required: true,
-        defaultValue: "customer", // Google users will be customers by default
+        defaultValue: "customer", 
         input: true, 
       },
     },
   },
-  // The JWT plugin generates a token that our Express backend will verify via JWKS
   plugins: [jwt()],
 });
