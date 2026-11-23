@@ -25,6 +25,7 @@ export default function RootLayout({
           <Navbar />
         </Suspense>
         {/* Main content wrapper to push footer to the bottom */}
+        {/* i am labib */}
         <main className="flex-grow">
           {children}
         </main>
