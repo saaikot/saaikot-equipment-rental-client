@@ -41,7 +41,7 @@ export default function RegisterPage() {
         password: formData.password,
         name: formData.name,
         image: formData.photoURL, // Default profile picture
-        role: "customer", // Default role for new registrations
+        
       });
 
       if (error) {

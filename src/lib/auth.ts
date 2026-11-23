@@ -33,7 +33,9 @@ export const auth = betterAuth({
         type: "string",
         required: true,
         defaultValue: "customer", 
-        input: true, 
+        // New sign-ups (including Google) are always customers; only an admin
+        // can promote an account through the admin dashboard endpoint.
+        input: false, 
       },
     },
   },

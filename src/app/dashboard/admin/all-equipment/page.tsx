@@ -8,6 +8,7 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import EditEquipmentDialog from "@/components/dashboard/EditEquipmentDialog";
 import { Check, Eye, Trash2, X } from "lucide-react";
 import type { Equipment } from "@/lib/types";
 
@@ -212,6 +213,12 @@ export default function AdminAllEquipmentPage() {
                             <Eye className="w-4 h-4 text-blue-600" />
                           </Button>
                         </Link>
+                        <EditEquipmentDialog
+                          equipment={eq}
+                          onUpdated={(updated) =>
+                            setEquipment((prev) => prev.map((item) => (item._id === updated._id ? updated : item)))
+                          }
+                        />
                         <Button variant="ghost" size="icon" title="Delete" onClick={() => handleDelete(eq._id)}>
                           <Trash2 className="w-4 h-4 text-red-600" />
                         </Button>

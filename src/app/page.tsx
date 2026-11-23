@@ -2,6 +2,9 @@
 import Banner from "@/components/home/Banner";
 import Categories from "@/components/home/Categories";
 import FeaturedEquipment from "@/components/home/FeaturedEquipment";
+import HowItWorks from "@/components/home/HowItWorks";
+import Reviews from "@/components/home/Reviews";
+import TrustedOwners from "@/components/home/TrustedOwners";
 
 export default function Home() {
   return (
@@ -33,6 +36,10 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <HowItWorks />
+      <TrustedOwners />
+      <Reviews />
     </div>
   );
 }
