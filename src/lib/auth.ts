@@ -14,7 +14,7 @@ const db = client.db();
 
 export const auth = betterAuth({
   
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3001",
+  baseURL: process.env.BETTER_AUTH_URL || "https://saaikot-equipment-rental-client.vercel.app",
   trustedOrigins: [
     "http://localhost:3001",
     "https://saaikot-equipment-rental-client.vercel.app" 
