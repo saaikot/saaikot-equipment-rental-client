@@ -5,6 +5,6 @@ import type { auth } from "./auth";
 
 export const authClient = createAuthClient({
   // Base URL is automatically picked up from env, but explicitly setting it for safety
-  baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001",
+  baseURL: process.env.NEXT_PUBLIC_APP_URL || "https://saaikot-equipment-rental-client.vercel.app",
   plugins: [jwtClient(), inferAdditionalFields<typeof auth>()],
 });
